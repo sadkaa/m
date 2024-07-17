@@ -1,274 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=0.9, maximum-scale=0.9, minimum-scale=0.9">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/style.css">
-  <title>إذاعة القرآن الكريم من القاهرة</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إذاعة القرآن الكريم من القاهرة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+           background-image: url('https://raw.githubusercontent.com/sadkaa/m/7084fca0730d34d976068ae7c626d92935d31e9a/images/MAJDYOMR.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .player-container {
+            position: fixed;
+            bottom: 50px; /* تعديل المسافة من الأسفل للمشغل */
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.0); /* خلفية شفافة */
+            padding: 20px;
+            border-radius: 20px;
+        }
+        .scrolling-text {
+            position: absolute;
+            bottom: -50px; /* تعديل المسافة من الأسفل للنص */
+            left: 0;
+            right: 0;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            font-size: 24px; /* حجم الخط */
+            color: yellow; /* لون النص الأصفر */
+        }
+        @keyframes scroll {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .play-pause-btn {
+            font-size: 48px; /* حجم الزر */
+            color: white;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        audio {
+            display: none; /* إخفاء المشغل الافتراضي */
+        }
+    </style>
 </head>
 <body>
-<iframe style="width:1%;height:1%;position:absolute;left:0px;top:0px;overflow:hidden" frameborder="0" type="text/html" src="https://www.dailymotion.com/embed/video/x84wyku?autoplay=0" width="1%" height="100%" allowfullscreen title="Dailymotion Video Player" allow="a"> </iframe>
-  <div class="bg">
-    <section class="player">
-      <div class="container">
-        <div class="top-icons">
+    <div class="player-container">
+        <h4>إذاعة القرآن الكريم من القاهرة</h4>
+  <h2>اللهم بلغ ثواب ما نسمعه من القرآن إلى </h2>
+  <h1>   روح / الحاج / محمد عمر</h1>
+
+        <div class="scrolling-text">
+            <p>اللهم اغفر له وارزقه الفردوس الأعلى واجعل قبره روضة من رياض الجنة</p>
         </div>
-        <div class="img">
-          <img src="https://github.com/sadkaa/m/blob/main/images/abdelkarin.JPG" alt="">
+        <div class="audio-controls">
+            <i class="fas fa-play play-pause-btn" id="playPauseBtn" onclick="toggleAudio()"></i>
         </div>
-        <div class="text">
-      <center> 
-          <h4>إذاعة القرآن الكريم من القاهرة</h4>
-          <h4>اللهم بلغ ثواب ما نسمعه من القرآن إلى روح / الحاج / عبدالكريم محمد</h4>
-      </div>
-        <div class="seek">
-          <div class="fill"></div>
-        </div>
-        <div class="btns">
-          <a href="#"></a>
-          <a href="#"></a>
-          <a href="#" class="play-btn" onclick="togglePlayPause()"><i class="fa fa-pause"></i></a>
-          <a href="#"></a>
-          <a href="#"></a>
-        </div>
-      </div>
-      <audio class="song" loop>
-        <source src="https://3vh.liveradiu.com:8000/128kp.mp3"/>
-    </audio>
-     <div align="center">
-<table border="0" width="100%" style="border-collapse: collapse">
-<tr><td class="alt1" colspan="3"><b>
-<font size="6" color="yellow">
-<marquee direction="right" width="100%" height="40" direction="right" onmouseover="this.stop()" onmouseout="this.start()" scrolldelay="0" scrollamount="10">اللهم بلغ ثواب ما نسمعه من القرآن إلى روح والدي الحاج / عبدالكريم محمد
-</marquee></font></b></td>
-</tr></table></div>
+        <audio id="audio" controls>
+            <source src="https://3vh.liveradiu.com:8000/128kp.mp3" type="audio/mpeg">
+            متصفحك لا يدعم عنصر الصوت.
+        </audio>
+    </div>
 
+    <script>
+        var audio = document.getElementById('audio');
+        var playPauseBtn = document.getElementById('playPauseBtn');
 
-    </section>
-  </div>
-  <script src="js/app.js"></script>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap');
-
-    *{
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body{
-      font-family: 'Nunito', sans-serif;
-      font-size: 16px;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      color: #fff;
-      font-weight: 200;
-    }
-
-    .bg{
-      background: url('images/Background.jpg') no-repeat center center/cover;
-      height: 100vh;
-      width: 100vw;
-    }
-    img{
-      max-width: 100%;
-    }
-    .player{
-      width: 400px;
-      height: 665px;
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      margin: 10px 0 0 0;
-      box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.5), -3px -3px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    .container{
-      width: 90%;
-      margin: 0 auto;
-      overflow: hidden;
-    }
-    .top-icons{
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-    }
-    .top-icons a{
-      color: #fff;
-      font-size: 1.3em;
-    }
-    .top-icons a:hover{
-      color: #b9b6b6;
-      transition: all 0.2s ease-in-out;
-    }
-    .img{
-      border-top: 3px solid #fff;
-      border-radius: 50%;
-    }
-    .img img{
-      margin: 50px 0 0 55px;
-      width: 70%;
-      border-radius: 50%;
-      transition: all 0.4s ease-in-out;
-      cursor: pointer;
-    }
-    .img img:hover{
-      box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.5), -3px -3px 50px rgba(0, 0, 0, 0.5);
-    }
-    .text{
-      text-align: center;
-      margin: 10px 0;
-    }
-    .text h1{
-      font-size: 3em;
-    }
-    .text h4{
-      font-size: 1.4em;
-    }
-    .time{
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0 0 0;
-    }
-    .time a{
-      color: #fff;
-      font-size: 1.1em;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .seek{
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.3);
-      margin: 5px 0;
-      position: relative;
-    }
-    .fill{
-      width: 0%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.7);
-    }
-    .btns{
-      margin: 40px 0;
-      text-align: center;
-    }
-    .btns a{
-      color: #fff;
-      font-size: 1.8em;
-      margin: 0 10px;
-      transition: all 0.3s ease-in-out;
-    }
-    .btns a:hover{
-      color: #b9b6b6;
-    }
-    .btns a:nth-child(1) , .btns a:nth-child(5){
-      opacity: 0.6;
-    } 
-    .btns a:nth-child(1):hover , .btns a:nth-child(5):hover{
-      opacity: 1;
-      color: #fff;
-    } 
-
-    .btns .fa-pause{
-      border: 2px solid #fff;
-      padding: 20px 22px;
-      border-radius: 50%;
-    }
-    .btns .fa-play{
-      border: 2px solid #fff;
-      padding: 20px 22px;
-      border-radius: 50%;
-    }
-    button{
-      color: #fff;
-      font-size: 1.8em;
-      font-weight: bold;
-      font-family: 'Nunito', sans-serif;
-      text-align: center;
-      background: #00c9d0;
-      border: none;
-      width: 100%;
-      height: 70px;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-    button:hover{
-      background: #02a0a5;
-    }
-  </style>
-
-  <script>
-    let wakeLock = null;
-
-    async function requestWakeLock() {
-      try {
-        wakeLock = await navigator.wakeLock.request('screen');
-        wakeLock.addEventListener('release', () => {
-          console.log('Wake Lock was released');
-        });
-        console.log('Wake Lock is active');
-      } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-      }
-    }
-
-    function togglePlayPause(){
-      const song = document.querySelector('.song');
-      if(song.paused){
-        song.play();
-        let playBtn = document.querySelector('.play-btn');
-        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
-        requestWakeLock();
-      } else{
-        song.pause();
-        playBtn = document.querySelector('.play-btn');
-        playBtn.innerHTML = '<i class="fa fa-play"></i>';
-        if (wakeLock !== null) {
-          wakeLock.release()
-            .then(() => {
-              wakeLock = null;
-            });
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.classList.remove('fa-play');
+                playPauseBtn.classList.add('fa-pause');
+            } else {
+                audio.pause();
+                playPauseBtn.classList.remove('fa-pause');
+                playPauseBtn.classList.add('fa-play');
+            }
         }
-      }
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        if (wakeLock !== null) {
-          requestWakeLock();
-        }
-      }
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const song = document.querySelector('.song');
-      song.play().then(() => {
-        requestWakeLock();
-        let playBtn = document.querySelector('.play-btn');
-        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
-      }).catch((error) => {
-        console.log('Autoplay was prevented:', error);
-      });
-
-      const fill = document.querySelector('.fill');
-      song.addEventListener('timeupdate', function(){
-        let position = song.currentTime / song.duration;
-        fill.style.width = position * 100 + '%';
-      });
-    });
-  </script>
-</div>
-</div>
-
-
-
+    </script>
 </body>
 </html>

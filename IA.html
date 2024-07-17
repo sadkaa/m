@@ -23,7 +23,7 @@
         }
         .player-container {
             position: fixed;
-            bottom: 130px; /* تعديل المسافة من الأسفل */
+            bottom: 150px;
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.0);
@@ -32,7 +32,7 @@
         }
         .scrolling-text {
             position: absolute;
-            bottom: -50px; /* تعديل المسافة من الأسفل للنص */
+            bottom: -50px;
             left: 0;
             right: 0;
             white-space: nowrap;
@@ -103,6 +103,40 @@
                     console.log('Auto-play was prevented:', error);
                 });
             }
+        }
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch(function(error) {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+        }
+
+        // Use Media Session API to handle background play controls
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: 'إذاعة القرآن الكريم',
+                artist: 'من القاهرة',
+                album: 'إذاعة القرآن الكريم',
+                artwork: [
+                    { src: 'https://raw.githubusercontent.com/sadkaa/m/7084fca0730d34d976068ae7c626d92935d31e9a/images/MAJDYOMR.png', sizes: '96x96', type: 'image/png' }
+                ]
+            });
+
+            navigator.mediaSession.setActionHandler('play', function() {
+                audio.play();
+                playPauseBtn.classList.remove('fa-play');
+                playPauseBtn.classList.add('fa-pause');
+            });
+
+            navigator.mediaSession.setActionHandler('pause', function() {
+                audio.pause();
+                playPauseBtn.classList.remove('fa-pause');
+                playPauseBtn.classList.add('fa-play');
+            });
         }
     </script>
 </body>

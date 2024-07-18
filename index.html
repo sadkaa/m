@@ -23,7 +23,7 @@
         }
         .player-container {
             position: fixed;
-            bottom: 50px; /* تعديل المسافة من الأسفل للمشغل */
+            bottom: 150px; /* تعديل المسافة من الأسفل للمشغل */
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.0); /* خلفية شفافة */
@@ -32,7 +32,7 @@
         }
         .scrolling-text {
             position: absolute;
-            bottom: -50px; /* تعديل المسافة من الأسفل للنص */
+            bottom: -70px; /* تعديل المسافة من الأسفل للنص */
             left: 0;
             right: 0;
             white-space: nowrap;
@@ -63,6 +63,24 @@
         audio {
             display: none; /* إخفاء المشغل الافتراضي */
         }
+
+        @media (max-width: 600px) {
+            body {
+                background-size: contain; /* تعديل حجم الخلفية لتتناسب مع الشاشات الصغيرة */
+            }
+            .player-container {
+                bottom: 20px; /* تقليل المسافة من الأسفل للمشغل */
+                padding: 10px; /* تقليل الحشوة */
+            }
+            .scrolling-text {
+                font-size: 16px; /* تقليل حجم الخط */
+                bottom: -30px; /* تعديل المسافة من الأسفل للنص */
+            }
+            .play-pause-btn {
+                font-size: 36px; /* تقليل حجم الزر */
+                margin: 0 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -86,80 +104,90 @@
     let wakeLock = null;
 
     async function requestWakeLock() {
-      try {
-        wakeLock = await navigator.wakeLock.request('screen');
-        wakeLock.addEventListener('release', () => {
-          console.log('Wake Lock was released');
-        });
-        console.log('Wake Lock is active');
-      } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-      }
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {
+                console.log('Wake Lock was released');
+            });
+            console.log('Wake Lock is active');
+        } catch (err) {
+            console.error(`${err.name}, ${err.message}`);
+        }
     }
 
-    function togglePlayPause(){
-      const song = document.getElementById('audio');
-      const playBtn = document.getElementById('playPauseBtn');
+    function togglePlayPause() {
+        const song = document.getElementById('audio');
+        const playBtn = document.getElementById('playPauseBtn');
 
-      if (!song || !playBtn) {
-        console.error('Song element or Play button not found.');
-        return;
-      }
-
-      if (song.paused) {
-        song.play().then(() => {
-          playBtn.classList.remove('fa-play');
-          playBtn.classList.add('fa-pause');
-          requestWakeLock();
-        }).catch(error => {
-          console.log('Error playing the song:', error);
-        });
-      } else {
-        song.pause();
-        playBtn.classList.remove('fa-pause');
-        playBtn.classList.add('fa-play');
-        if (wakeLock !== null) {
-          wakeLock.release().then(() => {
-            wakeLock = null;
-          }).catch(error => {
-            console.error('Error releasing wake lock:', error);
-          });
+        if (!song || !playBtn) {
+            console.error('Song element or Play button not found.');
+            return;
         }
-      }
+
+        if (song.paused) {
+            song.play().then(() => {
+                playBtn.classList.remove('fa-play');
+                playBtn.classList.add('fa-pause');
+                requestWakeLock();
+            }).catch(error => {
+                console.log('Error playing the song:', error);
+            });
+        } else {
+            song.pause();
+            playBtn.classList.remove('fa-pause');
+            playBtn.classList.add('fa-play');
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => {
+                    wakeLock = null;
+                }).catch(error => {
+                    console.error('Error releasing wake lock:', error);
+                });
+            }
+        }
     }
 
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && wakeLock !== null) {
-        requestWakeLock();
-      }
+        if (document.visibilityState === 'visible' && wakeLock !== null) {
+            requestWakeLock();
+        }
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-      const song = document.getElementById('audio');
-      const playBtn = document.getElementById('playPauseBtn');
+        const song = document.getElementById('audio');
+        const playBtn = document.getElementById('playPauseBtn');
 
-      if (!song || !playBtn) {
-        console.error('Required elements not found.');
-        return;
-      }
-
-      song.play().then(() => {
-        requestWakeLock();
-        playBtn.classList.remove('fa-play');
-        playBtn.classList.add('fa-pause');
-      }).catch((error) => {
-        console.log('Autoplay was prevented:', error);
-      });
-
-      song.addEventListener('timeupdate', function(){
-        let position = song.currentTime / song.duration;
-        const fill = document.querySelector('.fill');
-        if (fill) {
-          fill.style.width = position * 100 + '%';
+        if (!song || !playBtn) {
+            console.error('Required elements not found.');
+            return;
         }
-      });
+
+        song.addEventListener('play', () => {
+            playBtn.classList.remove('fa-play');
+            playBtn.classList.add('fa-pause');
+            requestWakeLock();
+        });
+
+        song.addEventListener('pause', () => {
+            playBtn.classList.remove('fa-pause');
+            playBtn.classList.add('fa-play');
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => {
+                    wakeLock = null;
+                }).catch(error => {
+                    console.error('Error releasing wake lock:', error);
+                });
+            }
+        });
+
+        song.addEventListener('timeupdate', function() {
+            let position = song.currentTime / song.duration;
+            const fill = document.querySelector('.fill');
+            if (fill) {
+                fill.style.width = position * 100 + '%';
+            }
+        });
     });
-  </script>
+</script>
 
 </body>
 </html>

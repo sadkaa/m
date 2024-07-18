@@ -98,6 +98,65 @@
                 playPauseBtn.classList.add('fa-play');
             }
         }
-    </script>
+        <script>
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock was released');
+        });
+        console.log('Wake Lock is active');
+      } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+      }
+    }
+
+    function togglePlayPause(){
+      const song = document.querySelector('.song');
+      if(song.paused){
+        song.play();
+        let playBtn = document.querySelector('.play-btn');
+        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+        requestWakeLock();
+      } else{
+        song.pause();
+        playBtn = document.querySelector('.play-btn');
+        playBtn.innerHTML = '<i class="fa fa-play"></i>';
+        if (wakeLock !== null) {
+          wakeLock.release()
+            .then(() => {
+              wakeLock = null;
+            });
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        if (wakeLock !== null) {
+          requestWakeLock();
+        }
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const song = document.querySelector('.song');
+      song.play().then(() => {
+        requestWakeLock();
+        let playBtn = document.querySelector('.play-btn');
+        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+      }).catch((error) => {
+        console.log('Autoplay was prevented:', error);
+      });
+
+      const fill = document.querySelector('.fill');
+      song.addEventListener('timeupdate', function(){
+        let position = song.currentTime / song.duration;
+        fill.style.width = position * 100 + '%';
+      });
+    });
+  </script>
 </body>
 </html>

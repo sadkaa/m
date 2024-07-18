@@ -82,23 +82,7 @@
             متصفحك لا يدعم عنصر الصوت.
         </audio>
     </div>
-
-    <script>
-        var audio = document.getElementById('audio');
-        var playPauseBtn = document.getElementById('playPauseBtn');
-
-        function toggleAudio() {
-            if (audio.paused) {
-                audio.play();
-                playPauseBtn.classList.remove('fa-play');
-                playPauseBtn.classList.add('fa-pause');
-            } else {
-                audio.pause();
-                playPauseBtn.classList.remove('fa-pause');
-                playPauseBtn.classList.add('fa-play');
-            }
-        }
-        <script>
+           <script>
     let wakeLock = null;
 
     async function requestWakeLock() {

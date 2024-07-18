@@ -23,7 +23,7 @@
         }
         .player-container {
             position: fixed;
-            bottom: 150px; /* تعديل المسافة من الأسفل للمشغل */
+            bottom: 50px; /* تعديل المسافة من الأسفل للمشغل */
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.0); /* خلفية شفافة */
@@ -32,7 +32,7 @@
         }
         .scrolling-text {
             position: absolute;
-            bottom: -70px; /* تعديل المسافة من الأسفل للنص */
+            bottom: -50px; /* تعديل المسافة من الأسفل للنص */
             left: 0;
             right: 0;
             white-space: nowrap;
@@ -62,24 +62,6 @@
         }
         audio {
             display: none; /* إخفاء المشغل الافتراضي */
-        }
-
-        @media (max-width: 600px) {
-            body {
-                background-size: contain; /* تعديل حجم الخلفية لتتناسب مع الشاشات الصغيرة */
-            }
-            .player-container {
-                bottom: 20px; /* تقليل المسافة من الأسفل للمشغل */
-                padding: 10px; /* تقليل الحشوة */
-            }
-            .scrolling-text {
-                font-size: 16px; /* تقليل حجم الخط */
-                bottom: -30px; /* تعديل المسافة من الأسفل للنص */
-            }
-            .play-pause-btn {
-                font-size: 36px; /* تقليل حجم الزر */
-                margin: 0 5px;
-            }
         }
     </style>
 </head>

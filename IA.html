@@ -13,7 +13,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('https://raw.githubusercontent.com/sadkaa/m/7084fca0730d34d976068ae7c626d92935d31e9a/images/MAJDYOMR.png');
+            background-image: url('https://raw.githubusercontent.com/sadkaa/m/main/images/MAGDY.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -23,22 +23,22 @@
         }
         .player-container {
             position: fixed;
-            bottom: 150px;
+            bottom: 50px; /* تعديل المسافة من الأسفل للمشغل */
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.0);
+            background: rgba(0, 0, 0, 0.0); /* خلفية شفافة */
             padding: 20px;
             border-radius: 20px;
         }
         .scrolling-text {
             position: absolute;
-            bottom: -50px;
+            bottom: -50px; /* تعديل المسافة من الأسفل للنص */
             left: 0;
             right: 0;
             white-space: nowrap;
             animation: scroll 20s linear infinite;
-            font-size: 24px;
-            color: yellow;
+            font-size: 24px; /* حجم الخط */
+            color: yellow; /* لون النص الأصفر */
         }
         @keyframes scroll {
             0% {
@@ -52,93 +52,124 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 10px;
         }
         .play-pause-btn {
-            font-size: 48px;
+            font-size: 48px; /* حجم الزر */
             color: white;
             cursor: pointer;
+            margin: 0 10px;
         }
         audio {
-            display: none;
+            display: none; /* إخفاء المشغل الافتراضي */
         }
     </style>
 </head>
 <body>
     <div class="player-container">
+        <h4>إذاعة القرآن الكريم من القاهرة</h4>
+        <h3>اللهم بلغ ثواب ما نسمعه من القرآن إلى </h3>
+        <h3>روح / الحاج / محمد عمر</h3>
+
         <div class="scrolling-text">
             <p>اللهم اغفر له وارزقه الفردوس الأعلى واجعل قبره روضة من رياض الجنة</p>
         </div>
         <div class="audio-controls">
-            <i class="fas fa-play play-pause-btn" id="playPauseBtn" onclick="toggleAudio()"></i>
+            <i class="fas fa-play play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()"></i>
         </div>
-        <audio id="audio" autoplay>
+        <audio id="audio" controls>
             <source src="https://3vh.liveradiu.com:8000/128kp.mp3" type="audio/mpeg">
             متصفحك لا يدعم عنصر الصوت.
         </audio>
     </div>
-    <script>
-        var audio = document.getElementById('audio');
-        var playPauseBtn = document.getElementById('playPauseBtn');
+<script>
+    let wakeLock = null;
 
-        function toggleAudio() {
-            if (audio.paused) {
-                audio.play();
-                playPauseBtn.classList.remove('fa-play');
-                playPauseBtn.classList.add('fa-pause');
-            } else {
-                audio.pause();
-                playPauseBtn.classList.remove('fa-pause');
-                playPauseBtn.classList.add('fa-play');
-            }
+    async function requestWakeLock() {
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {
+                console.log('Wake Lock was released');
+            });
+            console.log('Wake Lock is active');
+        } catch (err) {
+            console.error(`${err.name}, ${err.message}`);
+        }
+    }
+
+    function togglePlayPause() {
+        const song = document.getElementById('audio');
+        const playBtn = document.getElementById('playPauseBtn');
+
+        if (!song || !playBtn) {
+            console.error('Song element or Play button not found.');
+            return;
         }
 
-        window.onload = function() {
-            var playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    playPauseBtn.classList.remove('fa-play');
-                    playPauseBtn.classList.add('fa-pause');
+        if (song.paused) {
+            song.play().then(() => {
+                playBtn.classList.remove('fa-play');
+                playBtn.classList.add('fa-pause');
+                requestWakeLock();
+            }).catch(error => {
+                console.log('Error playing the song:', error);
+            });
+        } else {
+            song.pause();
+            playBtn.classList.remove('fa-pause');
+            playBtn.classList.add('fa-play');
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => {
+                    wakeLock = null;
                 }).catch(error => {
-                    console.log('Auto-play was prevented:', error);
+                    console.error('Error releasing wake lock:', error);
                 });
             }
         }
+    }
 
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-            .then(function(registration) {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }).catch(function(error) {
-                console.log('ServiceWorker registration failed: ', error);
-            });
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && wakeLock !== null) {
+            requestWakeLock();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const song = document.getElementById('audio');
+        const playBtn = document.getElementById('playPauseBtn');
+
+        if (!song || !playBtn) {
+            console.error('Required elements not found.');
+            return;
         }
 
-        // Use Media Session API to handle background play controls
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: 'إذاعة القرآن الكريم',
-                artist: 'من القاهرة',
-                album: 'إذاعة القرآن الكريم',
-                artwork: [
-                    { src: 'https://raw.githubusercontent.com/sadkaa/m/7084fca0730d34d976068ae7c626d92935d31e9a/images/MAJDYOMR.png', sizes: '96x96', type: 'image/png' }
-                ]
-            });
+        song.addEventListener('play', () => {
+            playBtn.classList.remove('fa-play');
+            playBtn.classList.add('fa-pause');
+            requestWakeLock();
+        });
 
-            navigator.mediaSession.setActionHandler('play', function() {
-                audio.play();
-                playPauseBtn.classList.remove('fa-play');
-                playPauseBtn.classList.add('fa-pause');
-            });
+        song.addEventListener('pause', () => {
+            playBtn.classList.remove('fa-pause');
+            playBtn.classList.add('fa-play');
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => {
+                    wakeLock = null;
+                }).catch(error => {
+                    console.error('Error releasing wake lock:', error);
+                });
+            }
+        });
 
-            navigator.mediaSession.setActionHandler('pause', function() {
-                audio.pause();
-                playPauseBtn.classList.remove('fa-pause');
-                playPauseBtn.classList.add('fa-play');
-            });
-        }
-    </script>
-   
+        song.addEventListener('timeupdate', function() {
+            let position = song.currentTime / song.duration;
+            const fill = document.querySelector('.fill');
+            if (fill) {
+                fill.style.width = position * 100 + '%';
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
